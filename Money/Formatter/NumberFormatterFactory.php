@@ -6,8 +6,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class NumberFormatterFactory
 {
-    public static function createNumberFormatter(RequestStack $requestStack)
+    public static function createNumberFormatter(RequestStack $requestStack, string $defaultLocale)
     {
-        return new \NumberFormatter($requestStack->getCurrentRequest()->getLocale(), \NumberFormatter::CURRENCY);
+        if (null === $request = $requestStack->getCurrentRequest()) {
+            $locale = $defaultLocale;
+        } else {
+            $locale = $requestStack->getCurrentRequest()->getLocale();
+        }
+
+        return new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
     }
 }
