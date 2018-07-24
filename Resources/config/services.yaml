@@ -1,0 +1,16 @@
+services:
+    Padam87\MoneyBundle\Doctrine\Mapping\Driver\MoneyEmbeddedDriver:
+        arguments:
+            $config: '%padam87_money.config%'
+
+    Padam87\MoneyBundle\Money\Formatter\NumberFormatterFactory: ~
+
+    padam87_money.number_formatter:
+        class: \NumberFormatter
+        factory:   'Padam87\MoneyBundle\Money\Formatter\NumberFormatterFactory:createNumberFormatter'
+        arguments: ['@request_stack']
+
+    Money\Formatter\IntlMoneyFormatter:
+        arguments:
+            - '@padam87_money.number_formatter'
+            - '@Money\Currencies\CurrencyList'

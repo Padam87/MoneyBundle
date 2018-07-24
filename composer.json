@@ -1,0 +1,23 @@
+{
+    "name": "padam87/money-bundle",
+    "description": "Symfony bundle for https://github.com/moneyphp/money",
+    "type": "symfony-bundle",
+    "require": {
+        "php": "^7.0",
+        "ext-bcmath": "^7.0",
+        "symfony/framework-bundle": "^3.4",
+        "moneyphp/money": "^3.1",
+        "doctrine/orm": "^2.5",
+        "doctrine/doctrine-bundle": "^1.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adam Prager",
+            "email": "prager.adam87@gmail.com"
+        }
+    ]
+}
