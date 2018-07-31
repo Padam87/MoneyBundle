@@ -4,7 +4,7 @@
     "type": "symfony-bundle",
     "require": {
         "php": "^7.0",
-        "ext-bcmath": "^7.0",
+        "ext-bcmath": "*",
         "symfony/framework-bundle": "^3.4|^4.0",
         "moneyphp/money": "^3.1",
         "doctrine/orm": "^2.5",
