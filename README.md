@@ -2,12 +2,12 @@
 
 Symfony bundle for https://github.com/moneyphp/money
 
-As an **opinionated** bundle, this money bundle uses the following principals as it's main guide:
+As an **opinionated** bundle, this money bundle uses the following principles as it's main guide:
 - Storage is just as important as calculation.
 - Financial data should be held in SQL, so Doctrine ORM only implementation.
 - Money objects are Embeddables.
 - Amount should be stored in a human readable way in the database.
-- ISO money precision (eg smallest amount is 1 cent for EUR) is not viable for complex applications.
+- ISO money scale (eg smallest amount is 1 cent for EUR) is not viable for complex applications.
 
 To achieve these, the following restrictions apply:
 - precision and scale are mandatory (but have default values)
