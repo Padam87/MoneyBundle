@@ -71,6 +71,8 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
                 ]
             )
         );
+
+        $container->setAlias(Currencies::class, CurrencyList::class);
     }
 }
 
