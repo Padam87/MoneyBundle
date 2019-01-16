@@ -2,6 +2,7 @@
 
 namespace Padam87\MoneyBundle\DependencyInjection;
 
+use Money\Currencies;
 use Money\Currencies\CurrencyList;
 use Padam87\MoneyBundle\Doctrine\Type\CurrencyType;
 use Padam87\MoneyBundle\Doctrine\Type\MoneyAmountType;
