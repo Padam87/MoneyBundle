@@ -29,9 +29,9 @@ class MoneyType extends AbstractType
             ->add('amount', $options['amount_type'], $options['amount_options'])
             ->addModelTransformer(
                 new CallbackTransformer(
-                    function (Money $model = null) {
+                    function (Money $model = null) use ($options) {
                         if ($model === null) {
-                            $model = new Money(0, new Currency('EUR'));
+                            $model = new Money(0, new Currency($options['default_currency_code']));
                         }
 
                         return [
@@ -60,6 +60,7 @@ class MoneyType extends AbstractType
                     'amount_options' => [
                         'label' => false,
                     ],
+                    'default_currency_code' => 'EUR',
                     'currency_enabled' => false,
                     'currency_type' => CurrencyType::class,
                     'currency_options' => [
