@@ -23,9 +23,12 @@ services:
     Padam87\MoneyBundle\Service\MoneyHelper:
         public: true
         arguments:
-            - '%padam87_money.config%'
+            $config: '%padam87_money.config%'
 
-    Padam87\MoneyBundle\Form\MoneyType: ~
+    Padam87\MoneyBundle\Form\MoneyType:
+        arguments:
+            $config: '%padam87_money.config%'
+
     Padam87\MoneyBundle\Form\CurrencyType:
         arguments:
-            - '%padam87_money.config%'
+            $config: '%padam87_money.config%'
