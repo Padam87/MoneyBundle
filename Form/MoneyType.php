@@ -14,10 +14,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MoneyType extends AbstractType
 {
     private $moneyHelper;
+    private $config;
 
-    public function __construct(MoneyHelper $moneyHelper)
+    public function __construct(MoneyHelper $moneyHelper, array $config)
     {
         $this->moneyHelper = $moneyHelper;
+        $this->config = $config;
     }
 
     /**
@@ -60,7 +62,7 @@ class MoneyType extends AbstractType
                     'amount_options' => [
                         'label' => false,
                     ],
-                    'default_currency_code' => 'EUR',
+                    'default_currency_code' => $this->config['default_currency'],
                     'currency_enabled' => false,
                     'currency_type' => CurrencyType::class,
                     'currency_options' => [
