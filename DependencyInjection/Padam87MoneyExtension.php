@@ -61,7 +61,7 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
             'addDriver',
             [
                 $container->getDefinition('Padam87\MoneyBundle\Doctrine\Mapping\Driver\MoneyEmbeddedDriver'),
-                'Money'
+                'Money\Money'
             ]
         );
 
@@ -69,7 +69,7 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
             'addDriver',
             [
                 $container->getDefinition('Padam87\MoneyBundle\Doctrine\Mapping\Driver\CurrencyPairEmbeddedDriver'),
-                'Money'
+                'Money\CurrencyPair'
             ]
         );
 
