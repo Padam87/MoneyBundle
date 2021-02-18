@@ -55,11 +55,21 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
     {
         $config = $container->getParameter('padam87_money.config');
 
-        $container->getDefinition('doctrine.orm.default_metadata_driver')->addMethodCall(
+        $driver = $container->getDefinition('doctrine.orm.default_metadata_driver');
+
+        $driver->addMethodCall(
             'addDriver',
             [
                 $container->getDefinition('Padam87\MoneyBundle\Doctrine\Mapping\Driver\MoneyEmbeddedDriver'),
-                'Money'
+                'Money\Money'
+            ]
+        );
+
+        $driver->addMethodCall(
+            'addDriver',
+            [
+                $container->getDefinition('Padam87\MoneyBundle\Doctrine\Mapping\Driver\CurrencyPairEmbeddedDriver'),
+                'Money\CurrencyPair'
             ]
         );
 

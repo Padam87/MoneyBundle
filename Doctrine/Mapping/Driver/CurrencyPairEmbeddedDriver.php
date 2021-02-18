@@ -4,17 +4,10 @@ namespace Padam87\MoneyBundle\Doctrine\Mapping\Driver;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
-use Money\Money;
+use Money\CurrencyPair;
 
-class MoneyEmbeddedDriver implements MappingDriver
+class CurrencyPairEmbeddedDriver implements MappingDriver
 {
-    private $config;
-
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -26,17 +19,22 @@ class MoneyEmbeddedDriver implements MappingDriver
 
         $metadata->mapField(
             [
-                'fieldName' => 'amount',
-                'type' => 'money_amount',
-                'precision' => $this->config['precision'],
-                'scale' => $this->config['scale'],
+                'fieldName' => 'baseCurrency',
+                'type' => 'currency',
             ]
         );
 
         $metadata->mapField(
             [
-                'fieldName' => 'currency',
+                'fieldName' => 'counterCurrency',
                 'type' => 'currency',
+            ]
+        );
+
+        $metadata->mapField(
+            [
+                'fieldName' => 'conversionRatio',
+                'type' => 'float',
             ]
         );
     }
@@ -47,7 +45,7 @@ class MoneyEmbeddedDriver implements MappingDriver
     public function getAllClassNames()
     {
         return [
-            Money::class
+            CurrencyPair::class
         ];
     }
 

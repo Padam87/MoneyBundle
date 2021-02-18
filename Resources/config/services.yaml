@@ -8,6 +8,8 @@ services:
         arguments:
             $config: '%padam87_money.config%'
 
+    Padam87\MoneyBundle\Doctrine\Mapping\Driver\CurrencyPairEmbeddedDriver: ~
+
     Padam87\MoneyBundle\Money\Formatter\NumberFormatterFactory: ~
 
     padam87_money.number_formatter:
@@ -32,3 +34,17 @@ services:
     Padam87\MoneyBundle\Form\CurrencyType:
         arguments:
             $config: '%padam87_money.config%'
+
+    Padam87\MoneyBundle\Exchange\DatabaseExchange:
+        arguments:
+            - '@Doctrine\Persistence\ManagerRegistry'
+
+    Money\Exchange\ReversedCurrenciesExchange:
+        arguments:
+            - '@Padam87\MoneyBundle\Exchange\DatabaseExchange'
+
+    Money\Converter:
+        class: Money\Converter
+        arguments:
+            - '@Money\Currencies\CurrencyList'
+            - '@Money\Exchange\ReversedCurrenciesExchange'
