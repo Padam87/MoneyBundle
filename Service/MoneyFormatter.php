@@ -51,7 +51,7 @@ class MoneyFormatter
         $formatter = new \NumberFormatter($locale, $formatStyle);
         $formatter->setAttribute(\NumberFormatter::ROUNDING_MODE, \NumberFormatter::ROUND_CEILING);
 
-        if ($digits) {
+        if ($digits !== null) {
             $formatter->setAttribute(\NumberFormatter::FRACTION_DIGITS, $digits);
             $formatter->setAttribute(\NumberFormatter::MIN_FRACTION_DIGITS, $digits);
             $formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, $digits);
