@@ -47,7 +47,6 @@ class DecimalType extends AbstractType
         $resolver
             ->setDefaults(
                 [
-                    'data_class' => BigDecimal::class,
                     'integer_only' => false,
                 ]
             )

@@ -46,7 +46,6 @@ class CurrencyType extends AbstractType
         $resolver
             ->setDefaults(
                 [
-                    'data_class' => Currency::class,
                     'choices' => array_combine($this->config['currencies'], $this->config['currencies']),
                 ]
             )
