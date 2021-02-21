@@ -2,9 +2,9 @@
 
 namespace Padam87\MoneyBundle\Doctrine\Mapping\Driver;
 
+use Brick\Money\Money;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
-use Money\Money;
 
 class MoneyEmbeddedDriver implements MappingDriver
 {
@@ -27,7 +27,7 @@ class MoneyEmbeddedDriver implements MappingDriver
         $metadata->mapField(
             [
                 'fieldName' => 'amount',
-                'type' => 'money_amount',
+                'type' => 'decimal_object',
                 'precision' => $this->config['precision'],
                 'scale' => $this->config['scale'],
             ]

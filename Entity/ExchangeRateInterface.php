@@ -2,9 +2,9 @@
 
 namespace Padam87\MoneyBundle\Entity;
 
-use Money\CurrencyPair;
+use Brick\Math\BigNumber;
 
 interface ExchangeRateInterface
 {
-    public function getCurrencyPair(): CurrencyPair;
+    public function getConversionRatio(): ?BigNumber;
 }
