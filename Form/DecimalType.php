@@ -35,7 +35,7 @@ class DecimalType extends AbstractType
                             return null;
                         }
 
-                        return BigDecimal::of(preg_replace('/\s+/', '', $formData));
+                        return BigDecimal::of(str_replace([' ', ','], ['', '.'], $formData));
                     }
                 )
             )
