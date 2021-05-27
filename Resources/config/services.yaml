@@ -10,6 +10,7 @@ services:
         arguments:
             $requestStack: '@request_stack'
             $defaultLocale: '%kernel.default_locale%'
+            $config: '%padam87_money.config%'
 
     Padam87\MoneyBundle\Form\CurrencyType:
         arguments:
