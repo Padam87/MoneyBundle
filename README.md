@@ -1,6 +1,6 @@
 # MoneyBundle
 
-Symfony bundle for https://github.com/moneyphp/money
+Symfony bundle for https://github.com/brick/money
 
 As an **opinionated** bundle, this money bundle uses the following principles as it's main guide:
 - Storage is just as important as calculation.
@@ -13,9 +13,6 @@ To achieve these, the following restrictions apply:
 - precision and scale are mandatory (but have default values)
 - amounts are mapped as DECIMAL (changable, but not recommended to change)
 - ext-bcmath is mandatory.
-(DECIMAL database values are converted to string by PDO.
-This bundle uses bcmath to multiple these values by ˙pow(10, $scale)˙, and pass integer values to the `Money` object.
-https://github.com/Padam87/MoneyBundle/blob/master/Doctrine/Type/MoneyAmountType.php#L45)
 
 ## Installation
 

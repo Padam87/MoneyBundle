@@ -2,9 +2,9 @@
 
 namespace Padam87\MoneyBundle\Doctrine\Type;
 
+use Brick\Money\Currency;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use Money\Currency;
 
 class CurrencyType extends Type
 {
@@ -19,11 +19,19 @@ class CurrencyType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform)
     {
-        $fieldDeclaration['length'] = 3;
+        $column['length'] = $this->getDefaultLength($platform); // enforce column length even if specified
 
-        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
+        return $platform->getVarcharTypeDeclarationSQL($column);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultLength(AbstractPlatform $platform)
+    {
+        return 3;
     }
 
     /**
@@ -43,7 +51,7 @@ class CurrencyType extends Type
             return null;
         }
 
-        return new Currency($value);
+        return Currency::of($value);
     }
 
     /**
@@ -51,10 +59,14 @@ class CurrencyType extends Type
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        if (!$value instanceof Currency) {
-            throw new \LogicException();
+        if ($value === null) {
+            return null;
         }
 
-        return $value->getCode();
+        if (!$value instanceof Currency) {
+            throw new \LogicException(sprintf('Only instances of "%s" can be persisted as currency', Currency::class));
+        }
+
+        return (string) $value->getCurrencyCode();
     }
 }
