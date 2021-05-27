@@ -2,6 +2,7 @@
 
 namespace Padam87\MoneyBundle\Service;
 
+use Brick\Money\Currency;
 use Brick\Money\Money;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -11,17 +12,23 @@ class MoneyFormatter
 {
     private RequestStack $requestStack;
     private string $defaultLocale;
+    private array $config;
 
-    public function __construct(RequestStack $requestStack, string $defaultLocale)
+    public function __construct(RequestStack $requestStack, string $defaultLocale, array $config)
     {
         $this->requestStack = $requestStack;
         $this->defaultLocale = $defaultLocale;
+        $this->config = $config;
     }
 
     public function format(?Money $money, ?int $digits = null): ?string
     {
         if ($money === null) {
             return null;
+        }
+
+        if ($digits === null) {
+            $digits = $this->getCurrencyDigits($money->getCurrency());
         }
 
         return $money->formatWith($this->createFormatter($digits));
@@ -31,6 +38,10 @@ class MoneyFormatter
     {
         if ($money === null) {
             return null;
+        }
+
+        if ($digits === null) {
+            $digits = $this->getCurrencyDigits($money->getCurrency());
         }
 
         return $this->createFormatter($digits, \NumberFormatter::DECIMAL)->format((string) $money->getAmount());
@@ -59,6 +70,15 @@ class MoneyFormatter
         }
 
         return $formatter;
+    }
+
+    private function getCurrencyDigits(Currency $currency): ?int
+    {
+        if (array_key_exists($currency->getCurrencyCode(), $this->config['currency_digits'])) {
+            return (int) $this->config['currency_digits'][$currency->getCurrencyCode()];
+        }
+
+        return null;
     }
 
     private function getLocale()
