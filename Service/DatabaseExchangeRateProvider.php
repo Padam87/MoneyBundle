@@ -2,6 +2,7 @@
 
 namespace Padam87\MoneyBundle\Service;
 
+use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
 use Doctrine\Persistence\ManagerRegistry;
 use Padam87\MoneyBundle\Entity\ExchangeRateInterface;
@@ -31,9 +32,7 @@ class DatabaseExchangeRateProvider implements ExchangeRateProvider
         }
 
         if (null === $exchangeRate = $repo->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)) {
-            throw new \LogicException(
-                sprintf('%s - >%s ratio not found in the database.', $sourceCurrencyCode, $sourceCurrencyCode)
-            );
+            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
         }
 
         return $exchangeRate->getConversionRatio();
