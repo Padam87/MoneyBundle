@@ -83,7 +83,7 @@ class MoneyFormatter
 
     private function getLocale()
     {
-        if (null === $request = $this->requestStack->getMasterRequest()) {
+        if (null === $request = $this->requestStack->getMainRequest()) {
             return $this->defaultLocale;
         }
 
