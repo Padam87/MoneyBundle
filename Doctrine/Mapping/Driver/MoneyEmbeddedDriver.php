@@ -2,9 +2,10 @@
 
 namespace Padam87\MoneyBundle\Doctrine\Mapping\Driver;
 
-use Brick\Money\Money;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
+use Padam87\MoneyBundle\Money\EmbeddedMoney;
+use Padam87\MoneyBundle\Money\NullableMoney;
 
 class MoneyEmbeddedDriver implements MappingDriver
 {
@@ -30,6 +31,7 @@ class MoneyEmbeddedDriver implements MappingDriver
                 'type' => 'decimal_object',
                 'precision' => $this->config['precision'],
                 'scale' => $this->config['scale'],
+                'nullable' => $className === NullableMoney::class,
             ]
         );
 
@@ -37,6 +39,7 @@ class MoneyEmbeddedDriver implements MappingDriver
             [
                 'fieldName' => 'currency',
                 'type' => 'currency',
+                'nullable' => $className === NullableMoney::class,
             ]
         );
     }
@@ -47,7 +50,8 @@ class MoneyEmbeddedDriver implements MappingDriver
     public function getAllClassNames()
     {
         return [
-            Money::class
+            EmbeddedMoney::class,
+            NullableMoney::class,
         ];
     }
 

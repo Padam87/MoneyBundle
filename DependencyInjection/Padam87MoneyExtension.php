@@ -2,8 +2,11 @@
 
 namespace Padam87\MoneyBundle\DependencyInjection;
 
+use Padam87\MoneyBundle\Doctrine\Mapping\Driver\MoneyEmbeddedDriver;
 use Padam87\MoneyBundle\Doctrine\Type\CurrencyType;
 use Padam87\MoneyBundle\Doctrine\Type\DecimalObjectType;
+use Padam87\MoneyBundle\Money\EmbeddedMoney;
+use Padam87\MoneyBundle\Money\NullableMoney;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -54,8 +57,15 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
         $driver->addMethodCall(
             'addDriver',
             [
-                $container->getDefinition('Padam87\MoneyBundle\Doctrine\Mapping\Driver\MoneyEmbeddedDriver'),
-                'Brick\Money\Money'
+                $container->getDefinition(MoneyEmbeddedDriver::class),
+                EmbeddedMoney::class
+            ]
+        );
+        $driver->addMethodCall(
+            'addDriver',
+            [
+                $container->getDefinition(MoneyEmbeddedDriver::class),
+                NullableMoney::class
             ]
         );
     }

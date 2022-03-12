@@ -33,6 +33,9 @@ services:
         tags:
             - 'twig.extension'
 
+    Padam87\MoneyBundle\Money\Context\BundleContext:
+        shared: false
+
     Padam87\MoneyBundle\Service\DatabaseExchangeRateProvider:
         arguments:
             $doctrine: '@doctrine'
@@ -40,3 +43,4 @@ services:
     Brick\Money\CurrencyConverter:
         arguments:
             $exchangeRateProvider: '@Padam87\MoneyBundle\Service\DatabaseExchangeRateProvider'
+            $context: '@Padam87\MoneyBundle\Money\Context\BundleContext'
