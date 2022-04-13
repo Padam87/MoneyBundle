@@ -2,22 +2,15 @@
 
 namespace Padam87\MoneyBundle\Form;
 
-use Brick\Money\Currency;
+use Brick\Math\BigDecimal;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CurrencyType extends AbstractType
+class DecimalType extends AbstractType
 {
-    private array $config;
-
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -26,15 +19,23 @@ class CurrencyType extends AbstractType
         $builder
             ->addModelTransformer(
                 new CallbackTransformer(
-                    function (?Currency $modelData = null) {
-                        return $modelData ? $modelData->getCurrencyCode() : null;
+                    function (?BigDecimal $modelData = null) use ($options) {
+                        if ($modelData === null) {
+                            return null;
+                        }
+
+                        if ($options['integer_only']) {
+                            return $modelData->getIntegralPart();
+                        }
+
+                        return (string) $modelData;
                     },
-                    function ($formData) {
+                    function (?string $formData) {
                         if ($formData === null) {
                             return null;
                         }
 
-                        return Currency::of($formData);
+                        return BigDecimal::of(str_replace([' ', ','], ['', '.'], $formData));
                     }
                 )
             )
@@ -46,7 +47,7 @@ class CurrencyType extends AbstractType
         $resolver
             ->setDefaults(
                 [
-                    'choices' => array_combine($this->config['currencies'], $this->config['currencies']),
+                    'integer_only' => false,
                 ]
             )
         ;
@@ -54,11 +55,11 @@ class CurrencyType extends AbstractType
 
     public function getParent()
     {
-        return ChoiceType::class;
+        return TextType::class;
     }
 
     public function getBlockPrefix()
     {
-        return 'moneyphp_currency';
+        return 'decimal';
     }
 }

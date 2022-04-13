@@ -2,14 +2,14 @@
 
 namespace Padam87\MoneyBundle\DependencyInjection;
 
-use Money\Currencies;
-use Money\Currencies\CurrencyList;
+use Padam87\MoneyBundle\Doctrine\Mapping\Driver\MoneyEmbeddedDriver;
 use Padam87\MoneyBundle\Doctrine\Type\CurrencyType;
-use Padam87\MoneyBundle\Doctrine\Type\MoneyAmountType;
+use Padam87\MoneyBundle\Doctrine\Type\DecimalObjectType;
+use Padam87\MoneyBundle\Money\EmbeddedMoney;
+use Padam87\MoneyBundle\Money\NullableMoney;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
@@ -40,7 +40,7 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
             [
                 'dbal' => [
                     'types' => [
-                        'money_amount' => MoneyAmountType::class,
+                        'decimal_object' => DecimalObjectType::class,
                         'currency' => CurrencyType::class,
                     ]
                 ],
@@ -53,37 +53,21 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
      */
     public function process(ContainerBuilder $container)
     {
-        $config = $container->getParameter('padam87_money.config');
-
         $driver = $container->getDefinition('doctrine.orm.default_metadata_driver');
-
         $driver->addMethodCall(
             'addDriver',
             [
-                $container->getDefinition('Padam87\MoneyBundle\Doctrine\Mapping\Driver\MoneyEmbeddedDriver'),
-                'Money\Money'
+                $container->getDefinition(MoneyEmbeddedDriver::class),
+                EmbeddedMoney::class
             ]
         );
-
         $driver->addMethodCall(
             'addDriver',
             [
-                $container->getDefinition('Padam87\MoneyBundle\Doctrine\Mapping\Driver\CurrencyPairEmbeddedDriver'),
-                'Money\CurrencyPair'
+                $container->getDefinition(MoneyEmbeddedDriver::class),
+                NullableMoney::class
             ]
         );
-
-        $container->setDefinition(
-            CurrencyList::class,
-            new Definition(
-                CurrencyList::class,
-                [
-                    array_fill_keys($config['currencies'], $config['scale'])
-                ]
-            )
-        );
-
-        $container->setAlias(Currencies::class, CurrencyList::class);
     }
 }
 

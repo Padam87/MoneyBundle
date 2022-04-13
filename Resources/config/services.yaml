@@ -1,50 +1,46 @@
 services:
     _defaults:
         public: false
-        autowire: true
-        autoconfigure: true
 
     Padam87\MoneyBundle\Doctrine\Mapping\Driver\MoneyEmbeddedDriver:
         arguments:
             $config: '%padam87_money.config%'
 
-    Padam87\MoneyBundle\Doctrine\Mapping\Driver\CurrencyPairEmbeddedDriver: ~
-
-    Padam87\MoneyBundle\Money\Formatter\NumberFormatterFactory: ~
-
-    padam87_money.number_formatter:
-        class: \NumberFormatter
-        factory:   'Padam87\MoneyBundle\Money\Formatter\NumberFormatterFactory:createNumberFormatter'
-        arguments: ['@request_stack', '%locale%']
-
-    Money\Formatter\IntlMoneyFormatter:
+    Padam87\MoneyBundle\Service\MoneyFormatter:
         arguments:
-            - '@padam87_money.number_formatter'
-            - '@Money\Currencies\CurrencyList'
-
-    Padam87\MoneyBundle\Service\MoneyHelper:
-        public: true
-        arguments:
-            $config: '%padam87_money.config%'
-
-    Padam87\MoneyBundle\Form\MoneyType:
-        arguments:
+            $requestStack: '@request_stack'
+            $defaultLocale: '%kernel.default_locale%'
             $config: '%padam87_money.config%'
 
     Padam87\MoneyBundle\Form\CurrencyType:
         arguments:
             $config: '%padam87_money.config%'
+        tags:
+            - 'form.type'
 
-    Padam87\MoneyBundle\Exchange\DatabaseExchange:
-        arguments:
-            - '@Doctrine\Persistence\ManagerRegistry'
+    Padam87\MoneyBundle\Form\DecimalType:
+        tags:
+            - 'form.type'
 
-    Money\Exchange\ReversedCurrenciesExchange:
-        arguments:
-            - '@Padam87\MoneyBundle\Exchange\DatabaseExchange'
+    Padam87\MoneyBundle\Form\MoneyType:
+        tags:
+            - 'form.type'
 
-    Money\Converter:
-        class: Money\Converter
+    Padam87\MoneyBundle\Twig\Extension\MoneyExtension:
         arguments:
-            - '@Money\Currencies\CurrencyList'
-            - '@Money\Exchange\ReversedCurrenciesExchange'
+            $formatter: '@Padam87\MoneyBundle\Service\MoneyFormatter'
+            $converter: '@Brick\Money\CurrencyConverter'
+        tags:
+            - 'twig.extension'
+
+    Padam87\MoneyBundle\Money\Context\BundleContext:
+        shared: false
+
+    Padam87\MoneyBundle\Service\DatabaseExchangeRateProvider:
+        arguments:
+            $doctrine: '@doctrine'
+
+    Brick\Money\CurrencyConverter:
+        arguments:
+            $exchangeRateProvider: '@Padam87\MoneyBundle\Service\DatabaseExchangeRateProvider'
+            $context: '@Padam87\MoneyBundle\Money\Context\BundleContext'

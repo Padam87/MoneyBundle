@@ -31,6 +31,9 @@ class Configuration implements ConfigurationInterface
                     ->scalarPrototype()->end()
                     ->defaultValue(['EUR'])
                 ->end()
+                ->arrayNode('currency_digits')
+                    ->scalarPrototype()->end()
+                ->end()
             ->end()
         ;
 

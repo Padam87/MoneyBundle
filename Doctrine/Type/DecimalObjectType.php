@@ -2,31 +2,18 @@
 
 namespace Padam87\MoneyBundle\Doctrine\Type;
 
+use Brick\Math\BigDecimal;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\DecimalType;
 
-class MoneyAmountType extends DecimalType
+class DecimalObjectType extends DecimalType
 {
-    /**
-     * This value is set by the configuration
-     *
-     * @var int
-     */
-    static $precision;
-
-    /**
-     * This value is set by the configuration
-     *
-     * @var int
-     */
-    static $scale;
-
     /**
      * {@inheritdoc}
      */
     public function getName()
     {
-        return 'money_amount';
+        return 'decimal_object';
     }
 
     /**
@@ -42,13 +29,26 @@ class MoneyAmountType extends DecimalType
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return bcmul($value, pow(10, self::$scale), 0);
+        if (null === $value) {
+            return null;
+        }
+
+        return BigDecimal::of($value);
     }
+
     /**
      * {@inheritdoc}
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return bcdiv($value, pow(10, self::$scale), self::$scale);
+        if ($value === null) {
+            return null;
+        }
+
+        if (!$value instanceof BigDecimal) {
+            throw new \LogicException(sprintf('Only instances of "%s" can be persisted as decimal', BigDecimal::class));
+        }
+
+        return (string) $value;
     }
 }
