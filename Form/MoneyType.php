@@ -2,8 +2,10 @@
 
 namespace Padam87\MoneyBundle\Form;
 
+use Brick\Math\RoundingMode;
 use Brick\Money\Currency;
 use Brick\Money\Money;
+use Padam87\MoneyBundle\Money\Context\BundleContext;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,7 +49,7 @@ class MoneyType extends AbstractType
                             $currency = Currency::of($options['default_currency_code']);
                         }
 
-                        return Money::of($amount, $currency);
+                        return Money::of($amount, $currency, $options['context'], $options['rounding_mode']);
                     }
                 )
             )
@@ -80,6 +82,8 @@ class MoneyType extends AbstractType
                         'label' => false,
                     ],
                     'addon_text' => null,
+                    'context' => new BundleContext(),
+                    'rounding_mode' => RoundingMode::UNNECESSARY,
                 ]
             )
         ;
