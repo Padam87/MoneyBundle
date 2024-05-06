@@ -53,6 +53,53 @@ padam87_money:
     }
 ```
 
+#### B) Using separate fields for amount and currency
+
+_This is recommended when multiple amounts share the same currency_
+
+```php
+    use MoneyFromDecimalTrait;
+
+    #[ORM\Column(type: 'currency')]
+    private Currency $currency;
+
+    #[ORM\Column(type: 'decimal_object')]
+    private ?BigDecimal $netPrice = null;
+    
+    #[ORM\Column(type: 'decimal_object')]
+    private ?BigDecimal $grossPrice = null;
+    
+
+    public function getCurrency(): Currency
+    {
+        return $this->currency;
+    }
+    
+    
+    public function getNetPrice(): Money
+    {
+        return $this->getMoney($this->netPrice);
+    }
+
+    protected function setNetPrice(Money $netPrice): self
+    {
+        $this->setMoney($this->netPrice, $netPrice);
+
+        return $this;
+    }
+    
+    
+    public function getGrossPrice(): Money
+    {
+        return $this->getMoney($this->grossPrice);
+    }
+
+    protected function setGrossPrice(Money $grossPrice): self
+    {
+        $this->setMoney($this->grossPrice, $grossPrice);
+
+        return $this;
+    }
 ```
 
 ### Formatting
