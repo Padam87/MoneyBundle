@@ -18,13 +18,13 @@ class MoneyType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('amount', $options['amount_type'], $options['amount_options'])
             ->addModelTransformer(
                 new CallbackTransformer(
-                    function (?Money $modelData = null) {
+                    function (?Money $modelData = null): ?array {
                         if ($modelData === null) {
                             return null;
                         }
@@ -34,7 +34,7 @@ class MoneyType extends AbstractType
                             'currency' => $modelData->getCurrency(),
                         ];
                     },
-                    function (?array $formData = null) use ($options) {
+                    function (?array $formData = null) use ($options): ?Money {
                         if ($formData === null) {
                             return null;
                         }
@@ -60,13 +60,13 @@ class MoneyType extends AbstractType
         }
     }
 
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['currency_enabled'] = $options['currency_enabled'];
         $view->vars['default_currency_code'] = $options['default_currency_code'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults(
@@ -89,7 +89,7 @@ class MoneyType extends AbstractType
         ;
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'money_object';
     }

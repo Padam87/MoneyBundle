@@ -2,6 +2,7 @@
 
 namespace Padam87\MoneyBundle\Money;
 
+use Brick\Math\BigNumber;
 use Brick\Math\BigDecimal;
 use Brick\Money\Currency;
 use Brick\Money\Money;
@@ -27,7 +28,7 @@ class EmbeddedMoney
         $this->currency = $money->getCurrency();
     }
 
-    public static function of($amount, Currency $currency): self
+    public static function of(BigNumber|int|float|string $amount, Currency $currency): self
     {
         return new EmbeddedMoney(Money::of($amount, $currency, new BundleContext()));
     }

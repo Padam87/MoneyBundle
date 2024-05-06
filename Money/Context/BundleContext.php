@@ -40,7 +40,7 @@ class BundleContext implements Context
         return self::$scale;
     }
 
-    public static function setScale($scale): void
+    public static function setScale(int $scale): void
     {
         self::$scale = $scale;
     }

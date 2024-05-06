@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class Padam87MoneyBundle extends Bundle
 {
-    public function boot()
+    public function boot(): void
     {
         $config = $this->container->getParameter('padam87_money.config');
 

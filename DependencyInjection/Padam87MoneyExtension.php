@@ -19,7 +19,7 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -33,7 +33,7 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
     /**
      * {@inheritdoc}
      */
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $container->prependExtensionConfig(
             'doctrine',
@@ -51,7 +51,7 @@ class Padam87MoneyExtension extends Extension implements PrependExtensionInterfa
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $driver = $container->getDefinition('doctrine.orm.default_metadata_driver');
         $driver->addMethodCall(

@@ -14,12 +14,12 @@ class DecimalType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->addModelTransformer(
                 new CallbackTransformer(
-                    function (?BigDecimal $modelData = null) use ($options) {
+                    function (?BigDecimal $modelData = null) use ($options): ?string {
                         if ($modelData === null) {
                             return null;
                         }
@@ -30,7 +30,7 @@ class DecimalType extends AbstractType
 
                         return (string) $modelData;
                     },
-                    function (?string $formData) {
+                    function (?string $formData): ?BigDecimal {
                         if ($formData === null) {
                             return null;
                         }
@@ -42,7 +42,7 @@ class DecimalType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults(
@@ -53,12 +53,12 @@ class DecimalType extends AbstractType
         ;
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return TextType::class;
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'decimal';
     }

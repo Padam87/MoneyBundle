@@ -22,16 +22,16 @@ class MoneyExtension extends AbstractExtension
         $this->converter = $converter;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
-            new TwigFilter('money', [$this->formatter, 'format']),
-            new TwigFilter('money_amount', [$this->formatter, 'amount']),
-            new TwigFilter('money_currency', [$this->formatter, 'currency']),
-            new TwigFilter('money_convert', [$this->converter, 'convert']),
+            new TwigFilter('money', $this->formatter->format(...)),
+            new TwigFilter('money_amount', $this->formatter->amount(...)),
+            new TwigFilter('money_currency', $this->formatter->currency(...)),
+            new TwigFilter('money_convert', $this->converter->convert(...)),
             new TwigFilter(
                 'currency',
-                function ($currency) {
+                function ($currency): ?string {
                     if ($currency === null) {
                         return null;
                     }
@@ -46,13 +46,13 @@ class MoneyExtension extends AbstractExtension
         ];
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
-            new TwigFunction('money', function ($amount, $currency) {
+            new TwigFunction('money', function ($amount, $currency): Money {
                 return Money::of($amount, $currency);
             }),
-            new TwigFunction('currency', function ($code) {
+            new TwigFunction('currency', function ($code): Currency {
                 return Currency::of($code);
             }),
         ];

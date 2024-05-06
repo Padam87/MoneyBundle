@@ -11,7 +11,7 @@ class DecimalObjectType extends DecimalType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'decimal_object';
     }
@@ -19,7 +19,7 @@ class DecimalObjectType extends DecimalType
     /**
      * {@inheritdoc}
      */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }
@@ -27,7 +27,7 @@ class DecimalObjectType extends DecimalType
     /**
      * {@inheritdoc}
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?BigDecimal
     {
         if (null === $value) {
             return null;
@@ -39,7 +39,7 @@ class DecimalObjectType extends DecimalType
     /**
      * {@inheritdoc}
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if ($value === null) {
             return null;

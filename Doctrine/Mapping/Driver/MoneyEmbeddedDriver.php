@@ -9,7 +9,7 @@ use Padam87\MoneyBundle\Money\NullableMoney;
 
 class MoneyEmbeddedDriver implements MappingDriver
 {
-    private $config;
+    private array $config;
 
     public function __construct(array $config)
     {
@@ -19,7 +19,7 @@ class MoneyEmbeddedDriver implements MappingDriver
     /**
      * {@inheritdoc}
      */
-    public function loadMetadataForClass($className, ClassMetadata $metadata)
+    public function loadMetadataForClass($className, ClassMetadata $metadata): void
     {
         /* @var \Doctrine\ORM\Mapping\ClassMetadataInfo $metadata */
 
@@ -47,7 +47,7 @@ class MoneyEmbeddedDriver implements MappingDriver
     /**
      * {@inheritdoc}
      */
-    public function getAllClassNames()
+    public function getAllClassNames(): array
     {
         return [
             EmbeddedMoney::class,
@@ -58,7 +58,7 @@ class MoneyEmbeddedDriver implements MappingDriver
     /**
      * {@inheritdoc}
      */
-    public function isTransient($className)
+    public function isTransient($className): bool
     {
         return false;
     }

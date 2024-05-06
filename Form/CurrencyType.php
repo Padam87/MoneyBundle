@@ -21,15 +21,15 @@ class CurrencyType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->addModelTransformer(
                 new CallbackTransformer(
-                    function (?Currency $modelData = null) {
-                        return $modelData ? $modelData->getCurrencyCode() : null;
+                    function (?Currency $modelData = null): ?string {
+                        return $modelData !== null ? $modelData->getCurrencyCode() : null;
                     },
-                    function ($formData) {
+                    function ($formData): ?Currency {
                         if ($formData === null) {
                             return null;
                         }
@@ -41,7 +41,7 @@ class CurrencyType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults(
@@ -52,12 +52,12 @@ class CurrencyType extends AbstractType
         ;
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return ChoiceType::class;
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'moneyphp_currency';
     }

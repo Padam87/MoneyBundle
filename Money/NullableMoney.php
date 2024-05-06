@@ -25,8 +25,8 @@ class NullableMoney
 
     public function __construct(?Money $money = null)
     {
-        $this->amount = $money ? $money->getAmount() : null;
-        $this->currency = $money ? $money->getCurrency() : null;
+        $this->amount = $money !== null ? $money->getAmount() : null;
+        $this->currency = $money !== null ? $money->getCurrency() : null;
     }
 
     public function __invoke(): ?Money
