@@ -2,6 +2,7 @@
 
 namespace Padam87\MoneyBundle\Service;
 
+use Brick\Math\BigNumber;
 use Brick\Money\Exception\CurrencyConversionException;
 use Brick\Money\ExchangeRateProvider;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,7 +18,7 @@ class DatabaseExchangeRateProvider implements ExchangeRateProvider
         $this->doctrine = $doctrine;
     }
 
-    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode)
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
     {
         if ($sourceCurrencyCode === $targetCurrencyCode) {
             return 1;
