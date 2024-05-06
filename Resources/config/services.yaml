@@ -43,4 +43,3 @@ services:
     Brick\Money\CurrencyConverter:
         arguments:
             $exchangeRateProvider: '@Padam87\MoneyBundle\Service\DatabaseExchangeRateProvider'
-            $context: '@Padam87\MoneyBundle\Money\Context\BundleContext'
