@@ -61,7 +61,7 @@ _This is recommended when multiple amounts share the same currency_
     use MoneyFromDecimalTrait;
 
     #[ORM\Column(type: 'currency')]
-    private Currency $currency;
+    private ?Currency $currency = null;
 
     #[ORM\Column(type: 'decimal_object')]
     private ?BigDecimal $netPrice = null;
@@ -70,7 +70,7 @@ _This is recommended when multiple amounts share the same currency_
     private ?BigDecimal $grossPrice = null;
     
 
-    public function getCurrency(): Currency
+    public function getCurrency(): ?Currency
     {
         return $this->currency;
     }
