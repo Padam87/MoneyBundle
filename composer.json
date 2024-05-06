@@ -3,10 +3,10 @@
     "description": "Symfony bundle for https://github.com/moneyphp/money",
     "type": "symfony-bundle",
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-bcmath": "*",
         "symfony/framework-bundle": "^6.0 || ^7.0",
-        "brick/money": ">=0.5.1 <0.9",
+        "brick/money": "^0.9",
         "doctrine/orm": "^2.5 || ^3.0",
         "doctrine/doctrine-bundle": "^2.0"
     },
