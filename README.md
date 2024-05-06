@@ -34,19 +34,33 @@ padam87_money:
 
 ### Doctrine
 
+#### A) Using the embedded money type
+
 ```php
-    /**
-     * @var Money
-     *
-     * @ORM\Embedded(class="Money\Money")
-     */
-    private $price;
+    #[ORM\Embedded(class: EmbeddedMoney::class)]
+    protected EmbeddedMoney $netPrice;
+
+    public function getNetPrice(): ?Money
+    {
+        return ($this->netPrice)();
+    }
+
+    public function setNetPrice(?Money $netPrice): self
+    {
+        $this->netPrice = new EmbeddedMoney($netPrice);
+
+        return $this;
+    }
+```
+
 ```
 
 ### Formatting
 
-The bundle adds 2 services.
+#### Twig
 
-`padam87_money.number_formatter` - A simple `\NumberFormatter` object, with the current request's locale, and currency style.
+`{{ netPrice|money }}` -> €100
 
-`Money\Formatter\IntlMoneyFormatter` - Intl money formatter
+`{{ netPrice|money_amount }}` -> 100
+
+`{{ netPrice|money_currency }}` -> €

@@ -3,7 +3,6 @@
 namespace Padam87\MoneyBundle\Money;
 
 use Brick\Math\BigDecimal;
-use Brick\Money\Context;
 use Brick\Money\Currency;
 use Brick\Money\Money;
 use Padam87\MoneyBundle\Money\Context\BundleContext;
