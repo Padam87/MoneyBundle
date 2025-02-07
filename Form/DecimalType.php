@@ -5,7 +5,7 @@ namespace Padam87\MoneyBundle\Form;
 use Brick\Math\BigDecimal;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -48,6 +48,7 @@ class DecimalType extends AbstractType
             ->setDefaults(
                 [
                     'integer_only' => false,
+                    'html5' => true,
                 ]
             )
         ;
@@ -55,7 +56,7 @@ class DecimalType extends AbstractType
 
     public function getParent(): ?string
     {
-        return TextType::class;
+        return NumberType::class;
     }
 
     public function getBlockPrefix(): string
