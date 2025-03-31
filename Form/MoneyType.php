@@ -43,7 +43,7 @@ class MoneyType extends AbstractType
                             return null;
                         }
 
-                        if (array_key_exists('currency', $formData)) {
+                        if (array_key_exists('currency', $formData) && null !== $formData['currency']) {
                             $currency = $formData['currency'];
                         } else {
                             $currency = Currency::of($options['default_currency_code']);
