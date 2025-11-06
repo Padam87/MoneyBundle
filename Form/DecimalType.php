@@ -29,6 +29,10 @@ class DecimalType extends AbstractType
                             return $modelData->getIntegralPart();
                         }
 
+                        if ($options['strip_trailing_zeros']) {
+                            $modelData = $modelData->stripTrailingZeros();
+                        }
+
                         return (string) $modelData;
                     },
                     function (?string $formData): ?BigDecimal {
@@ -49,8 +53,8 @@ class DecimalType extends AbstractType
             ->setDefaults(
                 [
                     'integer_only' => false,
+                    'strip_trailing_zeros' => true,
                     'html5' => true,
-                    'scale' => BundleContext::getScale(),
                 ]
             )
         ;
