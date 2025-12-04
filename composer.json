@@ -9,7 +9,7 @@
         "brick/money": "^0.9",
         "doctrine/orm": "^3.0",
         "doctrine/doctrine-bundle": "^3.0",
-        "doctrine/dbal": "^^4.0"
+        "doctrine/dbal": "^4.0"
     },
     "conflict": {
         "doctrine/persistence": "3.4.2 || 4.1.1"
