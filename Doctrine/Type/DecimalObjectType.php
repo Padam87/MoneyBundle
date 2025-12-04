@@ -4,9 +4,9 @@ namespace Padam87\MoneyBundle\Doctrine\Type;
 
 use Brick\Math\BigDecimal;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\DecimalType;
+use Doctrine\DBAL\Types\Type;
 
-class DecimalObjectType extends DecimalType
+class DecimalObjectType extends Type
 {
     /**
      * {@inheritdoc}
@@ -22,6 +22,14 @@ class DecimalObjectType extends DecimalType
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
+    {
+        return $platform->getDecimalTypeDeclarationSQL($column);
     }
 
     /**
