@@ -8,6 +8,11 @@ use Doctrine\DBAL\Types\Type;
 
 class DecimalObjectType extends Type
 {
+    public function __construct(private array $config = [])
+    {
+
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -19,16 +24,16 @@ class DecimalObjectType extends Type
     /**
      * {@inheritdoc}
      */
-    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
+        if (!isset($column['precision'])) {
+            $column['precision'] = $this->config['precision'];
+        }
+
+        if (!isset($column['scale'])) {
+            $column['scale'] = $this->config['scale'];
+        }
+
         return $platform->getDecimalTypeDeclarationSQL($column);
     }
 
