@@ -17,7 +17,12 @@ class Padam87MoneyBundle extends Bundle
         BundleContext::setScale($config['scale']);
 
         // @TODO: Keep an eye on https://github.com/doctrine/DoctrineBundle/issues/1867 for a better way to do this.
-        Type::addType('decimal_object', new DecimalObjectType($config));
-        Type::addType('currency', CurrencyType::class);
+        if (!Type::hasType('decimal_object')) {
+            Type::addType('decimal_object', new DecimalObjectType($config));
+        }
+        
+        if (!Type::hasType('currency')) {
+            Type::addType('currency', CurrencyType::class);
+        }
     }
 }
