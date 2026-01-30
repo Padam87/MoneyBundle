@@ -3,9 +3,9 @@
     "description": "Symfony bundle for https://github.com/moneyphp/money",
     "type": "symfony-bundle",
     "require": {
-        "php": "^8.1",
+        "php": "^8.4",
         "ext-bcmath": "*",
-        "symfony/framework-bundle": "^6.0 || ^7.0",
+        "symfony/framework-bundle": "^6.0 || ^7.0 || ^8.0",
         "brick/money": "^0.9",
         "doctrine/orm": "^3.0",
         "doctrine/doctrine-bundle": "^3.0",
