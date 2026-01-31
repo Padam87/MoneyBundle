@@ -4,21 +4,13 @@ namespace Padam87\MoneyBundle\Service;
 
 use Brick\Money\Currency;
 use Brick\Money\Money;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Currencies;
 
 class MoneyFormatter
 {
-    private RequestStack $requestStack;
-    private string $defaultLocale;
-    private array $config;
-
-    public function __construct(RequestStack $requestStack, string $defaultLocale, array $config)
+    public function __construct(private RequestStack $requestStack, private string $defaultLocale, private array $config)
     {
-        $this->requestStack = $requestStack;
-        $this->defaultLocale = $defaultLocale;
-        $this->config = $config;
     }
 
     public function format(?Money $money, ?int $digits = null): ?string

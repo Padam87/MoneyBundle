@@ -9,11 +9,8 @@ use Padam87\MoneyBundle\Money\NullableMoney;
 
 class MoneyEmbeddedDriver implements MappingDriver
 {
-    private array $config;
-
-    public function __construct(array $config)
+    public function __construct(private array $config)
     {
-        $this->config = $config;
     }
 
     /**

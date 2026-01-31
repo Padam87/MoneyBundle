@@ -2,6 +2,7 @@
 
 namespace Padam87\MoneyBundle\Twig\Extension;
 
+use Brick\Math\BigNumber;
 use Brick\Money\Currency;
 use Brick\Money\CurrencyConverter;
 use Brick\Money\Money;
@@ -13,13 +14,8 @@ use Twig\TwigFunction;
 
 class MoneyExtension extends AbstractExtension
 {
-    private MoneyFormatter $formatter;
-    private CurrencyConverter $converter;
-
-    public function __construct(MoneyFormatter $formatter, CurrencyConverter $converter)
+    public function __construct(private MoneyFormatter $formatter, private CurrencyConverter $converter)
     {
-        $this->formatter = $formatter;
-        $this->converter = $converter;
     }
 
     public function getFilters(): array
@@ -49,12 +45,8 @@ class MoneyExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('money', function ($amount, $currency): Money {
-                return Money::of($amount, $currency);
-            }),
-            new TwigFunction('currency', function ($code): Currency {
-                return Currency::of($code);
-            }),
+            new TwigFunction('money', fn(BigNumber|int|float|string $amount, Currency|string|int $currency): Money => Money::of($amount, $currency)),
+            new TwigFunction('currency', fn(string|int $code): Currency => Currency::of($code)),
         ];
     }
 }

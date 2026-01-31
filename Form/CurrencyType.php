@@ -11,11 +11,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CurrencyType extends AbstractType
 {
-    private array $config;
-
-    public function __construct(array $config)
+    public function __construct(private array $config)
     {
-        $this->config = $config;
     }
 
     /**
@@ -26,9 +23,7 @@ class CurrencyType extends AbstractType
         $builder
             ->addModelTransformer(
                 new CallbackTransformer(
-                    function (?Currency $modelData = null): ?string {
-                        return $modelData !== null ? $modelData->getCurrencyCode() : null;
-                    },
+                    fn(?Currency $modelData = null): ?string => $modelData !== null ? $modelData->getCurrencyCode() : null,
                     function ($formData): ?Currency {
                         if ($formData === null) {
                             return null;

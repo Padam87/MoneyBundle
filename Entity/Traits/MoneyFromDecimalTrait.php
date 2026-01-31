@@ -24,7 +24,7 @@ trait MoneyFromDecimalTrait
     {
         if ($strict && $this->getCurrency() !== null && !$this->getCurrency()->is($value->getCurrency())) {
             throw new \LogicException(
-                sprintf('Class "%s" has currency of "%s", tried to set "%s"', __CLASS__, $this->getCurrency(), $value->getCurrency())
+                sprintf('Class "%s" has currency of "%s", tried to set "%s"', self::class, $this->getCurrency(), $value->getCurrency())
             );
         }
 

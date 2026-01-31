@@ -2,6 +2,7 @@
 
 namespace Padam87\MoneyBundle\DependencyInjection;
 
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Padam87\MoneyBundle\Doctrine\Mapping\Driver\MoneyEmbeddedDriver;
 use Padam87\MoneyBundle\Money\EmbeddedMoney;
 use Padam87\MoneyBundle\Money\NullableMoney;
@@ -9,7 +10,6 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
 
 class Padam87MoneyExtension extends Extension implements CompilerPassInterface
 {
@@ -21,7 +21,7 @@ class Padam87MoneyExtension extends Extension implements CompilerPassInterface
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 
         $container->setParameter('padam87_money.config', $config);

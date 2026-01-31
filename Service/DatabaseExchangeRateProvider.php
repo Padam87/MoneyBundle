@@ -11,11 +11,8 @@ use Padam87\MoneyBundle\Repository\ExchangeRateRepositoryInterface;
 
 class DatabaseExchangeRateProvider implements ExchangeRateProvider
 {
-    private $doctrine;
-
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(private ManagerRegistry $doctrine)
     {
-        $this->doctrine = $doctrine;
     }
 
     public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
