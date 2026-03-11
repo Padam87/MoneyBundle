@@ -2,7 +2,6 @@
 
 namespace Padam87\MoneyBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -11,7 +10,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('padam87_money');
 
@@ -30,6 +29,9 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('currencies')
                     ->scalarPrototype()->end()
                     ->defaultValue(['EUR'])
+                ->end()
+                ->arrayNode('currency_digits')
+                    ->scalarPrototype()->end()
                 ->end()
             ->end()
         ;

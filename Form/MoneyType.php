@@ -2,47 +2,54 @@
 
 namespace Padam87\MoneyBundle\Form;
 
-use Money\Currency;
-use Money\Money;
-use Padam87\MoneyBundle\Service\MoneyHelper;
+use Brick\Math\RoundingMode;
+use Brick\Money\Currency;
+use Brick\Money\Money;
+use Padam87\MoneyBundle\Money\Context\BundleContext;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MoneyType extends AbstractType
 {
-    private $moneyHelper;
-    private $config;
-
-    public function __construct(MoneyHelper $moneyHelper, array $config)
-    {
-        $this->moneyHelper = $moneyHelper;
-        $this->config = $config;
-    }
-
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('amount', $options['amount_type'], $options['amount_options'])
             ->addModelTransformer(
                 new CallbackTransformer(
-                    function (Money $model = null) use ($options) {
-                        if ($model === null) {
-                            $model = new Money(0, new Currency($options['default_currency_code']));
+                    function (?Money $modelData = null): ?array {
+                        if ($modelData === null) {
+                            return null;
                         }
 
                         return [
-                            'amount' => $this->moneyHelper->getAmount($model),
-                            'currency' => $model->getCurrency(),
+                            'amount' => $modelData->getAmount(),
+                            'currency' => $modelData->getCurrency(),
                         ];
                     },
-                    function ($form) {
-                        return $this->moneyHelper->createMoney($form['amount'], $form['currency']);
+                    function (?array $formData = null) use ($options): ?Money {
+                        if ($formData === null) {
+                            return null;
+                        }
+
+                        if (null === $amount = $formData['amount']) {
+                            return null;
+                        }
+
+                        if (array_key_exists('currency', $formData) && null !== $formData['currency']) {
+                            $currency = $formData['currency'];
+                        } else {
+                            $currency = Currency::of($options['default_currency_code']);
+                        }
+
+                        return Money::of($amount, $currency, $options['context'], $options['rounding_mode']);
                     }
                 )
             )
@@ -53,28 +60,37 @@ class MoneyType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        $view->vars['currency_enabled'] = $options['currency_enabled'];
+        $view->vars['default_currency_code'] = $options['default_currency_code'];
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults(
                 [
-                    'amount_type' => TextType::class,
+                    'amount_type' => DecimalType::class,
                     'amount_options' => [
                         'label' => false,
                     ],
-                    'default_currency_code' => $this->config['default_currency'],
+                    'default_currency_code' => 'HUF',
                     'currency_enabled' => false,
                     'currency_type' => CurrencyType::class,
                     'currency_options' => [
                         'label' => false,
                     ],
+                    'addon_text' => null,
+                    'context' => new BundleContext(),
+                    'rounding_mode' => RoundingMode::UNNECESSARY,
                 ]
             )
         ;
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
-        return 'moneyphp_money';
+        return 'money_object';
     }
 }

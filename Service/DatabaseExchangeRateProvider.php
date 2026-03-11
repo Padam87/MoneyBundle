@@ -1,0 +1,38 @@
+<?php
+
+namespace Padam87\MoneyBundle\Service;
+
+use Brick\Math\BigNumber;
+use Brick\Money\Exception\CurrencyConversionException;
+use Brick\Money\ExchangeRateProvider;
+use Doctrine\Persistence\ManagerRegistry;
+use Padam87\MoneyBundle\Entity\ExchangeRateInterface;
+use Padam87\MoneyBundle\Repository\ExchangeRateRepositoryInterface;
+
+class DatabaseExchangeRateProvider implements ExchangeRateProvider
+{
+    public function __construct(private ManagerRegistry $doctrine)
+    {
+    }
+
+    public function getExchangeRate(string $sourceCurrencyCode, string $targetCurrencyCode): BigNumber|int|float|string
+    {
+        if ($sourceCurrencyCode === $targetCurrencyCode) {
+            return 1;
+        }
+
+        $repo = $this->doctrine->getRepository(ExchangeRateInterface::class);
+
+        if (!$repo instanceof ExchangeRateRepositoryInterface) {
+            throw new \LogicException(
+                sprintf('"%s" must implement %s', $repo->getClassName(), ExchangeRateRepositoryInterface::class)
+            );
+        }
+
+        if (null === $exchangeRate = $repo->getExchangeRate($sourceCurrencyCode, $targetCurrencyCode)) {
+            throw CurrencyConversionException::exchangeRateNotAvailable($sourceCurrencyCode, $targetCurrencyCode);
+        }
+
+        return $exchangeRate->getConversionRatio();
+    }
+}

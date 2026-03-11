@@ -2,45 +2,41 @@
 
 namespace Padam87\MoneyBundle\Form;
 
-use Money\Currency;
-use Money\Money;
-use Padam87\MoneyBundle\Service\MoneyHelper;
+use Brick\Money\Currency;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CurrencyType extends AbstractType
 {
-    private $config;
-
-    public function __construct(array $config)
+    public function __construct(private array $config)
     {
-        $this->config = $config;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->addModelTransformer(
                 new CallbackTransformer(
-                    function (Currency $model = null) {
-                        return $model ? $model->getCode() : null;
-                    },
-                    function ($form) {
-                        return new Currency($form);
+                    fn(?Currency $modelData = null): ?string => $modelData !== null ? $modelData->getCurrencyCode() : null,
+                    function ($formData): ?Currency {
+                        if ($formData === null) {
+                            return null;
+                        }
+
+                        return Currency::of($formData);
                     }
                 )
             )
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults(
@@ -51,12 +47,12 @@ class CurrencyType extends AbstractType
         ;
     }
 
-    public function getParent()
+    public function getParent(): ?string
     {
         return ChoiceType::class;
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'moneyphp_currency';
     }

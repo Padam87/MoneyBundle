@@ -4,21 +4,19 @@ namespace Padam87\MoneyBundle\Doctrine\Mapping\Driver;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\Driver\MappingDriver;
-use Money\Money;
+use Padam87\MoneyBundle\Money\EmbeddedMoney;
+use Padam87\MoneyBundle\Money\NullableMoney;
 
 class MoneyEmbeddedDriver implements MappingDriver
 {
-    private $config;
-
-    public function __construct(array $config)
+    public function __construct(private array $config)
     {
-        $this->config = $config;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function loadMetadataForClass($className, ClassMetadata $metadata)
+    public function loadMetadataForClass($className, ClassMetadata $metadata): void
     {
         /* @var \Doctrine\ORM\Mapping\ClassMetadataInfo $metadata */
 
@@ -27,9 +25,10 @@ class MoneyEmbeddedDriver implements MappingDriver
         $metadata->mapField(
             [
                 'fieldName' => 'amount',
-                'type' => 'money_amount',
+                'type' => 'decimal_object',
                 'precision' => $this->config['precision'],
                 'scale' => $this->config['scale'],
+                'nullable' => $className === NullableMoney::class,
             ]
         );
 
@@ -37,6 +36,7 @@ class MoneyEmbeddedDriver implements MappingDriver
             [
                 'fieldName' => 'currency',
                 'type' => 'currency',
+                'nullable' => $className === NullableMoney::class,
             ]
         );
     }
@@ -44,17 +44,18 @@ class MoneyEmbeddedDriver implements MappingDriver
     /**
      * {@inheritdoc}
      */
-    public function getAllClassNames()
+    public function getAllClassNames(): array
     {
         return [
-            Money::class
+            EmbeddedMoney::class,
+            NullableMoney::class,
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isTransient($className)
+    public function isTransient($className): bool
     {
         return false;
     }

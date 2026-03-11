@@ -1,6 +1,6 @@
 # MoneyBundle
 
-Symfony bundle for https://github.com/moneyphp/money
+Symfony bundle for https://github.com/brick/money
 
 As an **opinionated** bundle, this money bundle uses the following principles as it's main guide:
 - Storage is just as important as calculation.
@@ -13,9 +13,6 @@ To achieve these, the following restrictions apply:
 - precision and scale are mandatory (but have default values)
 - amounts are mapped as DECIMAL (changable, but not recommended to change)
 - ext-bcmath is mandatory.
-(DECIMAL database values are converted to string by PDO.
-This bundle uses bcmath to multiple these values by ˙pow(10, $scale)˙, and pass integer values to the `Money` object.
-https://github.com/Padam87/MoneyBundle/blob/master/Doctrine/Type/MoneyAmountType.php#L45)
 
 ## Installation
 
@@ -37,19 +34,80 @@ padam87_money:
 
 ### Doctrine
 
+#### A) Using the embedded money type
+
 ```php
-    /**
-     * @var Money
-     *
-     * @ORM\Embedded(class="Money\Money")
-     */
-    private $price;
+    #[ORM\Embedded(class: EmbeddedMoney::class)]
+    protected EmbeddedMoney $netPrice;
+
+    public function getNetPrice(): ?Money
+    {
+        return ($this->netPrice)();
+    }
+
+    public function setNetPrice(?Money $netPrice): self
+    {
+        $this->netPrice = new EmbeddedMoney($netPrice);
+
+        return $this;
+    }
+```
+
+#### B) Using separate fields for amount and currency
+
+_This is recommended when multiple amounts share the same currency_
+
+```php
+    use MoneyFromDecimalTrait;
+
+    #[ORM\Column(type: 'currency')]
+    private ?Currency $currency = null;
+
+    #[ORM\Column(type: 'decimal_object')]
+    private ?BigDecimal $netPrice = null;
+    
+    #[ORM\Column(type: 'decimal_object')]
+    private ?BigDecimal $grossPrice = null;
+    
+
+    public function getCurrency(): ?Currency
+    {
+        return $this->currency;
+    }
+    
+    
+    public function getNetPrice(): Money
+    {
+        return $this->getMoney($this->netPrice);
+    }
+
+    protected function setNetPrice(Money $netPrice): self
+    {
+        $this->setMoney($this->netPrice, $netPrice);
+
+        return $this;
+    }
+    
+    
+    public function getGrossPrice(): Money
+    {
+        return $this->getMoney($this->grossPrice);
+    }
+
+    protected function setGrossPrice(Money $grossPrice): self
+    {
+        $this->setMoney($this->grossPrice, $grossPrice);
+
+        return $this;
+    }
 ```
 
 ### Formatting
 
-The bundle adds 2 services.
+#### Twig
 
-`padam87_money.number_formatter` - A simple `\NumberFormatter` object, with the current request's locale, and currency style.
+`{{ netPrice|money }}` -> €100
 
-`Money\Formatter\IntlMoneyFormatter` - Intl money formatter
+`{{ netPrice|money_amount }}` -> 100
+
+`{{ netPrice|money_currency }}` -> €

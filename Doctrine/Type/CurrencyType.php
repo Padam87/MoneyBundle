@@ -2,16 +2,16 @@
 
 namespace Padam87\MoneyBundle\Doctrine\Type;
 
+use Brick\Money\Currency;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use Money\Currency;
 
 class CurrencyType extends Type
 {
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'currency';
     }
@@ -19,17 +19,25 @@ class CurrencyType extends Type
     /**
      * {@inheritdoc}
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
-        $fieldDeclaration['length'] = 3;
+        $column['length'] = $this->getDefaultLength($platform); // enforce column length even if specified
 
-        return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
+        return $platform->getStringTypeDeclarationSQL($column);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function getDefaultLength(AbstractPlatform $platform): int
+    {
+        return 3;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }
@@ -37,24 +45,28 @@ class CurrencyType extends Type
     /**
      * {@inheritdoc}
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Currency
     {
         if (null === $value) {
             return null;
         }
 
-        return new Currency($value);
+        return Currency::of($value);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        if (!$value instanceof Currency) {
-            throw new \LogicException();
+        if ($value === null) {
+            return null;
         }
 
-        return $value->getCode();
+        if (!$value instanceof Currency) {
+            throw new \LogicException(sprintf('Only instances of "%s" can be persisted as currency', Currency::class));
+        }
+
+        return (string) $value->getCurrencyCode();
     }
 }
